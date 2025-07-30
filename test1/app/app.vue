@@ -1,17 +1,20 @@
-<script setup lang="ts">
-  const gomugomu = Math.round(Math.random() * 100);
-  const marchenGomuGomu = gomugomu * 10;
+<script setup>
+  import Nami from '../components/Nami.vue';
+  import Luffy from '../components/monkey/Luffy.vue';
 </script>
 
 <template>
-  <p>
-    {{ gomugomu }} ゴムゴムは {{ marchenGomuGomu }} メルヘンゴムゴム
-  </p>
+  <section>
+    <h1>キャラクター名</h1>
+    <Nami/>
+    <Luffy/>
+  </section>
 </template>
 
 <style>
-  p{
-    color: red;
+  section{
+    border: blue 5px solid;
+    margin: 10px;
   }
 
 </style>
