@@ -2,23 +2,22 @@
   // import Nami from '../components/Nami.vue';
   import OneCharacter from '../components/OneCharacter2.vue';
   // import Luffy from '../components/monkey/Luffy.vue';
+  import BaseSection from '../components/BaseSection.vue'
+
+  //型定義をインポートするときは import type
+  import type {Character} from "../interfaces";
+
 
   //キャラクターリストデータ
-  const characterListInt = new Map<number, Character>();
-  characterListInt.set(1,{id: 1, name: "ルフィ", bounty: 100000000});
-  characterListInt.set(2,{id: 2, name: "ゾロ", bounty: 60000000});
-  const characterList = ref(characterListInt);
-
-  //懸賞金合計の算出プロパティ
-  const totalBounty = computed(
-    (): number => {
-      let total = 0;
-      for(const character of characterList.value.values()){
-        total += character.bounty;
-      }
-      return total;
+  useState<Map<number, Character>>(
+    "characterList",    //ステート名
+    (): Map<number, Character> => {   //初期値を生成
+      const characterListInt = new Map<number, Character>();
+      characterListInt.set(1,{id: 1, name: "ルフィ", bounty: 100000000});
+      characterListInt.set(2,{id: 2, name: "ゾロ", bounty: 60000000});
+      return characterListInt;
     }
-  );
+  );  //characterListでデータの取り出しが可
 
   const onIncrementBounty = (id: number) : void => {
     //オブジェクトを取得
@@ -30,26 +29,11 @@
     }
   }
 
-  //キャラクターインターフェース
-  interface Character{
-    id : number;
-    name : string;
-    bounty : number;
-  }
 </script>
 
 <template>
   <section>
-    <h1>キャラクターリスト</h1>
-    <p>懸賞金の合計: {{ totalBounty }}</p>
-    <OneCharacter
-      v-for="[id, character] in characterList"
-      :key = "id"
-      :id = "id"
-      :name ="character.name"
-      :bounty = "character.bounty"
-      v-on:incrementBounty = "onIncrementBounty"
-    />
+    <BaseSection/>
   </section>
 </template>
 
