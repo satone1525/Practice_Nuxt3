@@ -4,8 +4,9 @@
   // import Luffy from '../components/monkey/Luffy.vue';
   import BaseSection from '../components/BaseSection.vue'
 
+  
   //型定義をインポートするときは import type
-  import type {Character} from "../interfaces";
+  import type {Character} from "./interfaces";
 
 
   //キャラクターリストデータ
@@ -32,15 +33,34 @@
 </script>
 
 <template>
-  <section>
-    <BaseSection/>
-  </section>
+  <header>
+    <h1>ワンピース</h1>
+  </header>
+  <main>
+    <NuxtPage/>
+  </main>
 </template>
 
 <style>
-  section{
-    border: blue 5px solid;
-    margin: 10px;
+  main{
+    border: black 5px solid;
+    padding: 10px;
   }
 
+  #breadcrumbs ul li{
+    display: inline;
+    list-style-type: none;
+  }
+
+  #breadcrumbs ul{
+    padding-left: 0px;
+  }
+
+  #breadcrumbs ul li::before{
+    content: ">";
+  }
+
+  #breadcrumbs ul li:first-child:before{
+    content: none;
+  }
 </style>
