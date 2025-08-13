@@ -8,7 +8,7 @@
   <h1>キャラクター設定</h1>
   <nav id="breadcrumbs">
     <ul>
-      <li>TOP</li>
+      <li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
       <li>キャラクターリスト</li>
     </ul>
   </nav>
@@ -22,7 +22,9 @@
         <li
           v-for="[id, character] in characterList"
           v-bind:key="id">
-            No:{{id}} {{character.name}}
+            <NuxtLink v-bind:to="{name: 'character-characterDetail-id', params: {id: id}}">
+              No:{{id}} {{character.name}}
+            </NuxtLink>  
         </li>
       </ul>
     </section>
