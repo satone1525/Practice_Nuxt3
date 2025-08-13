@@ -15,7 +15,7 @@
   <section>
     <h2>キャラクターリスト</h2>
     <p>
-      追加はこちらから
+      追加は<NuxtLink v-bind:to="{name: 'character-characterAdd'}">こちら</NuxtLink>から
     </p>
     <section>
       <ul>
