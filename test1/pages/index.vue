@@ -7,7 +7,10 @@
     </nav>
     <section>
         <p>
-            キャラクターの設定はこちらから
+        <!-- <NuxtLink to="/character/characterList"> -->
+             <NuxtLink v-bind:to="{name: 'character-characterList'}">
+                キャラクターの設定はこちらから
+             </NuxtLink>
         </p>
     </section>
 </template>    

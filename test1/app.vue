@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  // import Nami from '../components/Nami.vue';
-  import OneCharacter from '../components/OneCharacter2.vue';
-  // import Luffy from '../components/monkey/Luffy.vue';
-  import BaseSection from '../components/BaseSection.vue'
+  // // import Nami from '../components/Nami.vue';
+  // import OneCharacter from '../components/OneCharacter2.vue';
+  // // import Luffy from '../components/monkey/Luffy.vue';
+  // import BaseSection from '../components/BaseSection.vue'
 
   
   //型定義をインポートするときは import type
