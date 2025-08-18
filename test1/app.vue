@@ -5,7 +5,10 @@
   const SITE_TITLE = "ワンピース"
 
   useHead({
-    title: SITE_TITLE
+    // title: SITE_TITLE
+    titleTemplate: (titleChunk: string|undefined):string => {
+      return titleChunk != undefined ? `${titleChunk} | ${SITE_TITLE}` : SITE_TITLE;
+    }
   });
 
   //キャラクターリストデータ
