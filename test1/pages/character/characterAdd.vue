@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type {character} from "@/interfaces"
 
+const PAGE_TITLE = "キャラクター追加"
+
+useHead({
+    title: PAGE_TITLE
+});
+
 //ルータオブジェクトを取得
 const router = useRouter();
 // router.push() => 指定の居場所へ
@@ -24,16 +30,15 @@ const onAdd = (): void => {
 </script>
 
 <template>
-    <h1>キャラクター設定</h1>
     <nav id="breadcrumbs">
         <ul>
             <li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
             <li><NuxtLink v-bind:to="{name: 'character-characterList'}">キャラクターリスト</NuxtLink></li>
-            <li>キャラクター追加</li>
+            <li>{{ PAGE_TITLE }}</li>
         </ul>
     </nav>
     <section>
-        <h2>キャラクター追加</h2>
+        <h2>{{ PAGE_TITLE }}</h2>
         <p>
             情報を入力し、登録ボタンを押してください
         </p>

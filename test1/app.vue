@@ -1,13 +1,12 @@
 <script setup lang="ts">
-  // // import Nami from '../components/Nami.vue';
-  // import OneCharacter from '../components/OneCharacter2.vue';
-  // // import Luffy from '../components/monkey/Luffy.vue';
-  // import BaseSection from '../components/BaseSection.vue'
-
-  
   //型定義をインポートするときは import type
   import type {Character} from "./interfaces";
 
+  const SITE_TITLE = "ワンピース"
+
+  useHead({
+    title: SITE_TITLE
+  });
 
   //キャラクターリストデータ
   useState<Map<number, Character>>(
@@ -33,12 +32,9 @@
 </script>
 
 <template>
-  <header>
-    <h1>ワンピース</h1>
-  </header>
-  <main>
+  <NuxtLayout>
     <NuxtPage/>
-  </main>
+  </NuxtLayout>
 </template>
 
 <style>
