@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { addServerImportsDir } from 'nuxt/kit';
 import type { Character } from '~/interfaces';
+// import CharacterList from '../characterList.vue';
 
 definePageMeta({
     layout: "character"
@@ -20,14 +20,33 @@ const route = useRoute();
 // route.params => { id: 1 }
 
 //キャラクターリストをステートから取得
-const characterList = useState<Map<number, Character>>("characterList");
-//キャラクターリストから該当データを取得
-const character = computed(
-    (): Character => {
-        const id = Number (route.params.id);
-        return characterList.value.get(id) as Character;
+// const characterList = useState<Map<number, Character>>("characterList");
+
+const asyncData = await useAsyncData(
+    `/CharacterInfo/${route.params.id}`,    //キー文字（重複実行を避ける）
+    (): Promise<any> => {   //取得データの型
+        const characterInfoUrl = "/api/getOneCharacterInfo"     //アクセス先URLのクエリパラメータ以外を用意
+        //クエリパラメータの元データを用意  ★ここが動画と違う！！（エラー解決のために少し変更してある）
+        const params = {
+            id: route.params.id as string
+        };
+        const queryParams = new URLSearchParams(params);//クエリパラメータを生成
+        const urlFull = `${characterInfoUrl}?${queryParams}`    //URL作成
+        //URLに非同期でアクセスしてデータを取得
+        const response = $fetch(urlFull);
+        return response;    //取得データ
+
+        //メモ
+        // useAsyncData()の戻り値は4つある！！
+        // (1)data：取得したデータ
+        // (2)pending：データ取得が終了したかを表すbool値
+        // (3)refresh：データを再取得する関数
+        // (4)データ取得に失敗した際のエラーオブジェクト
     }
 );
+
+//dataプロパティを取り出して代入
+const character = asyncData.data;
 
 </script>
 
