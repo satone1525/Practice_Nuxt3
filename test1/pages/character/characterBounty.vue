@@ -16,13 +16,11 @@ useHead({
 const characterList = useState<Map<number, Character>>("characterList");
 //初期IDをルフィに設定
 const selectedCharacterId = ref(1)
-//初期情報を取得
-const selectedCharacterInit = characterList.value.get(selectedCharacterId.value) as Character;
-//キャラクター情報のテンプレート変数を用意
-const selectedCharacter = ref(selectedCharacterInit);
 
 const asyncData = await useAsyncData(
     (): Promise<any> => {   //取得データの型
+        //初期情報を取得
+        const selectedCharacter = characterList.value.get(selectedCharacterId.value) as Character;
         const characterInfoUrl = "/api/getOneCharacterInfo";    //アクセス先URLのクエリパラメータ以外を用意
         //クエリパラメータの元データを用意  ★ここが動画と違う！！（エラー解決のために少し変更してある）
         const params : {
@@ -35,23 +33,27 @@ const asyncData = await useAsyncData(
         //URLに非同期でアクセスしてデータを取得
         const response = $fetch(urlFull);
         return response;    //取得データ
+    },
+    { //selectedCharacterIdが変更されるとリフレッシュされる
+        watch: [selectedCharacterId]
     }
 );
 
 // dataプロパティを取り出して代入
 const character = asyncData.data;
 const pending = asyncData.pending;      //データ取得中なら1になる
-const refresh = asyncData.refresh;
+// 以下はrefreshを使うときに使用する
+// const refresh = asyncData.refresh;
 
-const OneCharacterChanged = () => {
-    selectedCharacter.value = characterList.value.get(selectedCharacterId.value) as Character;
-    // refreshプロパティを関数として実行すると、useAsyncData()が再実行される
-    refresh();
-}
+// const OneCharacterChanged = () => {
+//     selectedCharacter.value = characterList.value.get(selectedCharacterId.value) as Character;
+//     // refreshプロパティを関数として実行すると、useAsyncData()が再実行される
+//     refresh();
+// }
 
 </script>
 
-
+<!-- ★watchを使うバージョン -->
 <template>
     <nav id="breadcrumbs">
         <ul>
@@ -66,7 +68,7 @@ const OneCharacterChanged = () => {
         <h2>{{ PAGE_TITLE }}</h2>
         <label>
             キャラクター:
-            <select v-model="selectedCharacterId" v-on:change="OneCharacterChanged">
+            <select v-model="selectedCharacterId">
                 <option v-for="[id, character] in characterList" v-bind:key="id" v-bind:value="id">
                     {{ character.name }}
                 </option>
@@ -77,7 +79,38 @@ const OneCharacterChanged = () => {
     <!-- 懸賞金を表示する -->
     <p v-if="pending">データ取得中...</p>
     <section v-else>
-       <p>{{ selectedCharacter.bounty }}ベリー</p>
+       <p>{{ character.bounty }}ベリー</p>
     </section> 
 </template>
+
+
+<!-- ★refreshを使うバージョン -->
+<!-- <template>
+    <nav id="breadcrumbs">
+        <ul>
+            <li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
+            <li><NuxtLink v-bind:to="{name: 'character-characterList'}">キャラクターリスト</NuxtLink></li>
+            <li>{{ PAGE_TITLE }}</li>
+        </ul>
+    </nav> -->
+    
+    <!-- ドロップダウンリストの作成 -->
+    <!-- <section>
+        <h2>{{ PAGE_TITLE }}</h2>
+        <label>
+            キャラクター:
+            <select v-model="selectedCharacterId" v-on:change="OneCharacterChanged">
+                <option v-for="[id, character] in characterList" v-bind:key="id" v-bind:value="id">
+                    {{ character.name }}
+                </option>
+            </select>
+        </label>
+    </section> -->
+
+    <!-- 懸賞金を表示する -->
+    <!-- <p v-if="pending">データ取得中...</p>
+    <section v-else>
+       <p>{{ selectedCharacter.bounty }}ベリー</p>
+    </section> 
+</template> -->
 

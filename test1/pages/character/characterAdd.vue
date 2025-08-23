@@ -13,7 +13,7 @@ const router = useRouter();
 // router.back() => 履歴上で１つ前の画面
 
 //キャラクターリストをステートから取得
-const characterList = useState<Map<number, Character>>("characterList");
+// const characterList = useState<Map<number, Character>>("characterList");
 //入力データと同期させるCharacterオブジェクトの用意
 const character: Character = reactive(
     {
@@ -23,9 +23,22 @@ const character: Character = reactive(
     }
 )
 
-const onAdd = (): void => {
-    characterList.value.set(character.id, character);
-    router.push({name: "character-characterList"})
+// 画面表示時にデータ取得の非同期処理が発生しない。手動で用意する必要がある
+const pending = ref(false);
+// 登録ボタンが押されたときの処理。
+// UseFetchを使用するため、メソッド自体がasync関数になる
+const onAdd = async (): Promise<void> => {
+    pending.value = true;
+    const asyncData = await useFetch(
+        "/api/addCharacterInfo",
+        {  //POST送信のオプションを指定
+            method: "POST",
+            body: character
+        }   //送信するパラメータはbodyプロパティで指定
+    )
+    if(asyncData.data.value != null && asyncData.data.value.result == 1){
+        router.push({name: "character-characterList"})
+    }    
 };
 </script>
 
@@ -39,37 +52,40 @@ const onAdd = (): void => {
     </nav>
     <section>
         <h2>{{ PAGE_TITLE }}</h2>
-        <p>
-            情報を入力し、登録ボタンを押してください
-        </p>
-        <form v-on:submit.prevent="onAdd">
-            <table>
-                <tr>
-                    <td>
-                        <label for="addId">No:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="addId" v-model.number="character.id" required></input>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="addName">名前</label>
-                    </td>
-                    <td>
-                        <input type="text" id="addName" v-model="character.name" required></input>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="addBounty">懸賞金：</label>
-                    </td>
-                    <td>
-                        <input type="number" id="addBounty" v-model.number="character.bounty" required>
-                    </td>
-                </tr>
-            </table>
-            <button type="submit">登録</button>
-        </form>
+        <p v-if="pending">データ送信中...</p>
+        <template v-else>
+            <p>
+                情報を入力し、登録ボタンを押してください
+            </p>
+            <form v-on:submit.prevent="onAdd">
+                <table>
+                    <tr>
+                        <td>
+                            <label for="addId">No:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="addId" v-model.number="character.id" required></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="addName">名前</label>
+                        </td>
+                        <td>
+                            <input type="text" id="addName" v-model="character.name" required></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="addBounty">懸賞金：</label>
+                        </td>
+                        <td>
+                            <input type="number" id="addBounty" v-model.number="character.bounty" required>
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit">登録</button>
+            </form>
+        </template>
     </section>
 </template>

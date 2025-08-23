@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type {Character} from "../../interfaces";
+    // import type {Character} from "../../interfaces";
 
     definePageMeta({
       layout: "character"
@@ -11,7 +11,12 @@
       title: PAGE_TITLE
     });
 
-    const characterList = useState<Map<number, Character>>("characterList");
+    // キャラクターリストをステートから取得
+    // const characterList = useState<Map<number, Character>>("characterList");
+    const asyncData = useLazyFetch("/api/getCharacterList");
+    const characterList = asyncData.data;
+    const pending = asyncData.pending;
+
 </script>
 
 <template>
@@ -26,13 +31,14 @@
     <p>
       追加は<NuxtLink v-bind:to="{name: 'character-characterAdd'}">こちら</NuxtLink>から
     </p>
-    <section>
+    <p v-if="pending">データ取得中...</p>
+    <section v-else>
       <ul>
         <li
-          v-for="[id, character] in characterList"
-          v-bind:key="id">
-            <NuxtLink v-bind:to="{name: 'character-characterDetail-id', params: {id: id}}">
-              No:{{id}} {{character.name}}
+          v-for="character in characterList"
+          v-bind:key="character.id">
+            <NuxtLink v-bind:to="{name: 'character-characterDetail-id', params: {id: character.id}}">
+              No:{{character.id}} {{character.name}}
             </NuxtLink>  
         </li>
       </ul>
