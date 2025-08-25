@@ -28,7 +28,11 @@
     }
   )
   const pending = asyncData.pending;
-
+  const isEmptyList = computed(
+    (): boolean => {
+      return characterList.value.length == 0;
+    }
+  )
 </script>
 
 <template>
@@ -46,6 +50,7 @@
     <p v-if="pending">データ取得中...</p>
     <section v-else>
       <ul>
+        <li v-if="isEmptyList">キャラクター情報はありません</li>
         <li
           v-for="character in characterList"
           v-bind:key="character.id">
