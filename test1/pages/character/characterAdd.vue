@@ -30,7 +30,7 @@ const pending = ref(false);
 const onAdd = async (): Promise<void> => {
     pending.value = true;
     const asyncData = await useFetch(
-        "/api/addCharacterInfo",
+        "/character-management/characters",
         {  //POST送信のオプションを指定
             method: "POST",
             body: character

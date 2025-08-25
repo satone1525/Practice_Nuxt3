@@ -22,27 +22,36 @@ const route = useRoute();
 //キャラクターリストをステートから取得
 // const characterList = useState<Map<number, Character>>("characterList");
 
+// ★ルートパラメータの取得
+const asyncData = useLazyFetch(`/character-management/characters/${route.params.id}`);
+
 // ★useAsyncData関数を使うバージョン
-const asyncData = useLazyAsyncData(
-    `/CharacterInfo/${route.params.id}`,    //キー文字（重複実行を避ける）
-    (): Promise<any> => {   //取得データの型
-        const characterInfoUrl = "/api/getOneCharacterInfo"     //アクセス先URLのクエリパラメータ以外を用意
-        //クエリパラメータの元データを用意  ★ここが動画と違う！！（エラー解決のために少し変更してある）
-        const params = {
-            id: route.params.id as string
-        };
-        const queryParams = new URLSearchParams(params);//クエリパラメータを生成
-        const urlFull = `${characterInfoUrl}?${queryParams}`    //URL作成
-        //URLに非同期でアクセスしてデータを取得
-        const response = $fetch(urlFull);
-        return response;    //取得データ
+// const asyncData = useLazyAsyncData(
+//     `/CharacterInfo/${route.params.id}`,    //キー文字（重複実行を避ける）
+//     (): Promise<any> => {   //取得データの型
+//         const characterInfoUrl = "/api/getOneCharacterInfo"     //アクセス先URLのクエリパラメータ以外を用意
+//         //クエリパラメータの元データを用意  ★ここが動画と違う！！（エラー解決のために少し変更してある）
+//         const params = {
+//             id: route.params.id as string
+//         };
+//         const queryParams = new URLSearchParams(params);//クエリパラメータを生成
+//         const urlFull = `${characterInfoUrl}?${queryParams}`    //URL作成
+//         //URLに非同期でアクセスしてデータを取得
+//         const response = $fetch(urlFull);
+//         return response;    //取得データ
 
 
-    }
-);
+//     }
+// );
 
 // dataプロパティを取り出して代入
-const character = asyncData.data;
+// const character = asyncData.data;
+const responsData = asyncData.data;
+const character = computed(
+    (): Character | undefined => {
+        return responsData.value?.data[0];
+    } 
+);
 const pending = asyncData.pending;      //データ取得中なら1になる
 
 // ------------------------------------------------------------------------------------------------------------

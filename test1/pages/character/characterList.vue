@@ -1,21 +1,33 @@
 <script setup lang="ts">
-    // import type {Character} from "../../interfaces";
+  import type { Character } from '~/interfaces';
+  
+  definePageMeta({
+    layout: "character"
+  });
 
-    definePageMeta({
-      layout: "character"
-    });
+  const PAGE_TITLE = "キャラクターリスト"
 
-    const PAGE_TITLE = "キャラクターリスト"
+  useHead({
+    title: PAGE_TITLE
+  });
 
-    useHead({
-      title: PAGE_TITLE
-    });
-
-    // キャラクターリストをステートから取得
-    // const characterList = useState<Map<number, Character>>("characterList");
-    const asyncData = useLazyFetch("/api/getCharacterList");
-    const characterList = asyncData.data;
-    const pending = asyncData.pending;
+  // キャラクターリストをステートから取得
+  // const characterList = useState<Map<number, Character>>("characterList");
+  const asyncData = useLazyFetch("/character-management/characters");
+  const responsData = asyncData.data;
+  const characterList = computed(
+    ():Character[] => {
+      // 空のキャラクターリスト配列を用意
+      let returnList: Character[] = [];
+      // レスポンスJSONデータがnullでないならば
+      if(responsData.value != null){
+        // レスポンスJSONデータのdataプロパティを取得
+        returnList = responsData.value.data;
+      }
+      return returnList;
+    }
+  )
+  const pending = asyncData.pending;
 
 </script>
 
